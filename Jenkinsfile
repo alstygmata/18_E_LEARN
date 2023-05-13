@@ -45,7 +45,7 @@ pipeline  {
                 docker stop website
                 '''
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "exit 1"
+                    sh "exit 0"
                 }
             }
         } 
