@@ -8,19 +8,7 @@ pipeline  {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
-    stages {
-        
-        stage("remove all containers and images") {
-            steps {
-                echo " ==============remove images and containers =================="
-                sh '''
-                #!/bin/sh
-                /home/master/delete.sh
-                '''
-            }
-        }
-        
-        
+    stages {       
         stage("Create docker image") {
             steps {
                 echo 'Creating docker image ...'
@@ -39,8 +27,22 @@ pipeline  {
                 }
             }
         }
-        
-
+        stage("docker stop") {
+            steps {
+                echo " ============== stopping all images =================="
+                sh '''
+                docker stop website 2> /dev/null
+                '''
+            }
+        } 
+        stage("docker remove") {
+            steps {
+                echo " ============== removing all docker containers =================="
+                sh '''
+                docker rm  website 2> /dev/null
+                '''
+            }
+        }
         stage("docker push") {
             steps {
                 echo " ============== pushing image =================="
