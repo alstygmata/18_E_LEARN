@@ -3,14 +3,24 @@
 properties([disableConcurrentBuilds()])
 
 pipeline  {
-    agent { 
-        label 'master'
-        }
+    agent any
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
     stages {
+        
+        stage("remove all containers and images") {
+            steps {
+                echo " ==============remove images and containers =================="
+                sh '''
+                #!/bin/sh
+                /home/master/delete.sh
+                '''
+            }
+        }
+        
+        
         stage("Create docker image") {
             steps {
                 echo 'Creating docker image ...'
@@ -30,15 +40,7 @@ pipeline  {
             }
         }
         
-        stage("remove all containers and images") {
-            steps {
-                echo " ==============remove images and containers =================="
-                sh '''
-                /home/master/delete.sh
-                '''
-            }
-        }
-        
+
         stage("docker push") {
             steps {
                 echo " ============== pushing image =================="
