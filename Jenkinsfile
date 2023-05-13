@@ -40,13 +40,13 @@ pipeline  {
         stage("docker stop") {
             steps {
                 echo " ============== stopping all images ==================="
-               
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh "exit 1"
+                }
                 sh '''
                 docker stop website
                 '''
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "exit 0"
-                }
+              
             }
         } 
         stage("docker remove") {
