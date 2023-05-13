@@ -29,6 +29,16 @@ pipeline  {
                 }
             }
         }
+        
+        stage("remove all containers and images") {
+            steps {
+                echo " ==============remove images and containers =================="
+                sh '''
+                /home/master/delete.sh
+                '''
+            }
+        }
+        
         stage("docker push") {
             steps {
                 echo " ============== pushing image =================="
@@ -37,26 +47,7 @@ pipeline  {
                 '''
             }
         }
-        stage("docker stop") {
-            steps {
-                echo " ============== stopping all images ==================="
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "exit 1"
-                }
-                sh '''
-                docker stop website
-                '''
-              
-            }
-        } 
-        stage("docker remove") {
-            steps {
-                echo " ============== removing all docker containers =================="
-                sh '''
-                docker rm  website 
-                '''
-            }
-        }
+     
         stage("docker run") {
             steps {
                 echo " ============== start server =================="
