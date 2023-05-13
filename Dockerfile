@@ -1,5 +1,4 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-MAINTAINER Trofimchuk Andrii
 WORKDIR /app
 
 # Copy and restore the project
